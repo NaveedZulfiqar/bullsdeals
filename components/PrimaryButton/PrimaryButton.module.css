@@ -1,0 +1,77 @@
+/* ── Base ────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 48px;
+  padding: 0 1.5rem;
+  font-family: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform var(--transition-base),
+    box-shadow var(--transition-base),
+    background var(--transition-base);
+  -webkit-tap-highlight-color: transparent;
+  white-space: nowrap;
+}
+
+.btn:active:not(:disabled) { transform: translateY(1px); }
+.btn:focus-visible {
+  outline: 3px solid rgba(0,0,0,0.25);
+  outline-offset: 3px;
+}
+.btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.fullWidth { width: 100%; }
+
+/* ── Primary variant — solid BLACK ──────────────────────────────── */
+.primary {
+  background: var(--color-btn);        /* #111111 */
+  color: var(--color-btn-text);        /* #ffffff */
+  box-shadow: var(--shadow-btn);
+}
+
+.primary:hover:not(:disabled) {
+  background: var(--color-btn-hover);  /* #2a2a2a */
+  box-shadow: 0 6px 20px rgba(0,0,0,0.45);
+  transform: translateY(-1px);
+}
+
+/* ── Ghost variant ───────────────────────────────────────────────── */
+.ghost {
+  background: transparent;
+  color: var(--color-btn);
+  border: 1.5px solid var(--color-btn);
+  box-shadow: none;
+}
+
+.ghost:hover:not(:disabled) {
+  background: rgba(0,0,0,0.05);
+  box-shadow: none;
+}
+
+/* ── Loading state ───────────────────────────────────────────────── */
+.loading { pointer-events: none; }
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2.5px solid rgba(255,255,255,0.30);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+.loadingText { opacity: 0.85; }
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

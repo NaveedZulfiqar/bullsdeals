@@ -1,0 +1,90 @@
+/* [project]/components/PrimaryButton/PrimaryButton.module.css [app-client] (css) */
+.PrimaryButton-module__3k1C-G__btn {
+  letter-spacing: .02em;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  height: 48px;
+  transition: transform var(--transition-base),
+    box-shadow var(--transition-base),
+    background var(--transition-base);
+  -webkit-tap-highlight-color: transparent;
+  white-space: nowrap;
+  border: none;
+  justify-content: center;
+  align-items: center;
+  gap: .5rem;
+  padding: 0 1.5rem;
+  font-family: inherit;
+  font-size: .9375rem;
+  font-weight: 600;
+  display: inline-flex;
+  position: relative;
+  overflow: hidden;
+}
+
+.PrimaryButton-module__3k1C-G__btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.PrimaryButton-module__3k1C-G__btn:focus-visible {
+  outline-offset: 3px;
+  outline: 3px solid #00000040;
+}
+
+.PrimaryButton-module__3k1C-G__btn:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+.PrimaryButton-module__3k1C-G__fullWidth {
+  width: 100%;
+}
+
+.PrimaryButton-module__3k1C-G__primary {
+  background: var(--color-btn);
+  color: var(--color-btn-text);
+  box-shadow: var(--shadow-btn);
+}
+
+.PrimaryButton-module__3k1C-G__primary:hover:not(:disabled) {
+  background: var(--color-btn-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px #00000073;
+}
+
+.PrimaryButton-module__3k1C-G__ghost {
+  color: var(--color-btn);
+  border: 1.5px solid var(--color-btn);
+  box-shadow: none;
+  background: none;
+}
+
+.PrimaryButton-module__3k1C-G__ghost:hover:not(:disabled) {
+  box-shadow: none;
+  background: #0000000d;
+}
+
+.PrimaryButton-module__3k1C-G__loading {
+  pointer-events: none;
+}
+
+.PrimaryButton-module__3k1C-G__spinner {
+  border: 2.5px solid #ffffff4d;
+  border-top-color: #fff;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  animation: .7s linear infinite PrimaryButton-module__3k1C-G__spin;
+}
+
+.PrimaryButton-module__3k1C-G__loadingText {
+  opacity: .85;
+}
+
+@keyframes PrimaryButton-module__3k1C-G__spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/*# sourceMappingURL=components_PrimaryButton_PrimaryButton_module_css_1igg3k2._.single.css.map*/

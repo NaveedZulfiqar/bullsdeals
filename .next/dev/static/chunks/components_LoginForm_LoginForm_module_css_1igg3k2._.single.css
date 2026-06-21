@@ -1,0 +1,158 @@
+/* [project]/components/LoginForm/LoginForm.module.css [app-client] (css) */
+.LoginForm-module__8TI3QG__form {
+  flex-direction: column;
+  gap: 1.125rem;
+  display: flex;
+}
+
+.LoginForm-module__8TI3QG__row {
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: .5rem;
+  display: flex;
+}
+
+.LoginForm-module__8TI3QG__checkLabel {
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+  align-items: center;
+  gap: .5rem;
+  display: flex;
+  position: relative;
+}
+
+.LoginForm-module__8TI3QG__checkbox {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.LoginForm-module__8TI3QG__checkmark {
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface-raised);
+  width: 18px;
+  height: 18px;
+  transition: background var(--transition-base),
+    border-color var(--transition-base),
+    box-shadow var(--transition-base);
+  border-radius: 4px;
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  position: relative;
+}
+
+.LoginForm-module__8TI3QG__checkmark:after {
+  content: "";
+  opacity: 0;
+  width: 5px;
+  height: 9px;
+  transition: transform var(--transition-base), opacity var(--transition-base);
+  border: 2px solid #fff;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg)scale(0)translateY(-1px);
+}
+
+.LoginForm-module__8TI3QG__checkbox:checked ~ .LoginForm-module__8TI3QG__checkmark {
+  background: linear-gradient(135deg,
+    var(--color-primary-dark),
+    var(--color-primary-light));
+  border-color: var(--color-primary);
+  box-shadow: 0 2px 8px var(--color-primary-glow);
+}
+
+.LoginForm-module__8TI3QG__checkbox:checked ~ .LoginForm-module__8TI3QG__checkmark:after {
+  opacity: 1;
+  transform: rotate(45deg)scale(1)translateY(-1px);
+}
+
+.LoginForm-module__8TI3QG__checkbox:focus-visible ~ .LoginForm-module__8TI3QG__checkmark {
+  outline: 3px solid var(--color-primary-glow);
+  outline-offset: 2px;
+}
+
+.LoginForm-module__8TI3QG__checkText {
+  color: var(--color-text-secondary);
+  font-size: .875rem;
+  font-weight: 500;
+}
+
+.LoginForm-module__8TI3QG__forgotLink {
+  color: var(--color-primary-dark);
+  border-radius: var(--radius-sm);
+  transition: color var(--transition-base), background var(--transition-base);
+  align-items: center;
+  gap: .3rem;
+  margin-right: -4px;
+  padding: 2px 4px;
+  font-size: .875rem;
+  font-style: italic;
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-flex;
+}
+
+.LoginForm-module__8TI3QG__forgotLink:hover {
+  color: var(--color-primary);
+  background: var(--color-primary-subtle);
+}
+
+.LoginForm-module__8TI3QG__forgotLink:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
+}
+
+.LoginForm-module__8TI3QG__linkIcon {
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.75px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+}
+
+.LoginForm-module__8TI3QG__errorBanner {
+  background: var(--color-error-bg);
+  border-radius: var(--radius-md);
+  color: var(--color-error);
+  border: 1px solid #c0392b33;
+  align-items: center;
+  gap: .5rem;
+  padding: .75rem 1rem;
+  font-size: .875rem;
+  font-weight: 500;
+  animation: .2s forwards LoginForm-module__8TI3QG__slideIn;
+  display: flex;
+}
+
+.LoginForm-module__8TI3QG__errorIcon {
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.75px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+}
+
+@keyframes LoginForm-module__8TI3QG__slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/*# sourceMappingURL=components_LoginForm_LoginForm_module_css_1igg3k2._.single.css.map*/

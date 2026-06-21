@@ -1,0 +1,48 @@
+/* [project]/components/FeatureItem/FeatureItem.module.css [app-client] (css) */
+.FeatureItem-module__aiuyzW__item {
+  border-radius: var(--radius-md);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  transition: background var(--transition-base), transform var(--transition-base);
+  cursor: default;
+  background: #ffffff1f;
+  border: 1px solid #ffffff2e;
+  align-items: center;
+  gap: .75rem;
+  padding: .75rem 1rem;
+  display: flex;
+}
+
+.FeatureItem-module__aiuyzW__item:hover {
+  background: #fff3;
+  transform: translateX(4px);
+}
+
+.FeatureItem-module__aiuyzW__icon {
+  color: #ffffffe6;
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
+  width: 20px;
+  height: 20px;
+  display: flex;
+}
+
+.FeatureItem-module__aiuyzW__icon svg {
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.75px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  width: 20px;
+  height: 20px;
+}
+
+.FeatureItem-module__aiuyzW__label {
+  color: #ffffffeb;
+  letter-spacing: .01em;
+  font-size: .875rem;
+  font-weight: 500;
+}
+
+/*# sourceMappingURL=components_FeatureItem_FeatureItem_module_css_1igg3k2._.single.css.map*/
