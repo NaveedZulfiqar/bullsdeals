@@ -1,19 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import React, { useState } from "react";
 import {
-  Home,
   Users,
   TrendingUp,
-  Calculator,
-  Folder,
-  Mail,
-  Banknote,
-  ChevronDown,
-  Settings,
-  User,
-  LogOut,
   RefreshCw,
   FileText,
   Handshake,
@@ -25,50 +15,11 @@ import {
   Wallet,
   Star,
   Check,
-  Menu,
-  X,
+  ChevronDown,
 } from "lucide-react";
 
 export default function DashboardPage() {
-  const router = useRouter();
-  const [currentUser, setCurrentUser] = useState<{ name: string; email: string } | null>(null);
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isPerformerDropdownOpen, setIsPerformerDropdownOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("Home");
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const checkUser = async () => {
-      try {
-        const res = await fetch("/api/auth/me");
-        if (res.ok) {
-          const data = await res.json();
-          if (data.authenticated) {
-            setCurrentUser(data.user);
-          } else {
-            router.push("/login");
-          }
-        } else {
-          router.push("/login");
-        }
-      } catch (err) {
-        console.error("Error verifying authentication session:", err);
-        router.push("/login");
-      }
-    };
-    checkUser();
-  }, [router]);
-
-  const handleLogout = async () => {
-    try {
-      const res = await fetch("/api/auth/logout", { method: "POST" });
-      if (res.ok) {
-        window.location.href = "/login";
-      }
-    } catch (err) {
-      console.error("Logout failed:", err);
-    }
-  };
 
   const formattedDate = new Intl.DateTimeFormat("en-US", {
     weekday: "long",
@@ -76,342 +27,218 @@ export default function DashboardPage() {
     month: "long",
     day: "numeric",
     timeZone: "UTC",
-  }).format(new Date("2026-06-24T12:00:00Z"));
-
-  const navItems = [
-    { name: "Home", icon: Home, hasDropdown: false },
-    { name: "Masters", icon: Users, hasDropdown: true },
-    { name: "Trades", icon: TrendingUp, hasDropdown: false },
-    { name: "Accounting", icon: Calculator, hasDropdown: true },
-    { name: "Reports", icon: Folder, hasDropdown: true },
-    { name: "Contact Support", icon: Mail, hasDropdown: false },
-    { name: "Payroll", icon: Banknote, hasDropdown: true },
-  ];
+  }).format(new Date());
 
   return (
-    <div className="min-h-screen bg-[#F8F9FC] text-[#2C2C2C] flex flex-col font-sans w-full">
-
-      {/* Top Navigation Bar */}
-      <nav className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm h-16 flex items-center justify-between px-4 sm:px-6 w-full">
-
-        {/* Left: Brand Logo */}
-        <div className="flex items-center gap-2 flex-shrink-0">
-
-          <span className="font-bold text-base sm:text-lg tracking-wide text-[#2C2C2C] uppercase whitespace-nowrap">
-            BULLS <span className="text-[#FD7E14]">DEALS</span>
-          </span>
+    <main className="flex-1 w-full px-4 sm:px-6 py-6 space-y-6">
+      {/* Page Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-gray-200 pb-5">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#2C2C2C]">Good Evening</h1>
+          <p className="text-sm text-gray-400 mt-1 font-medium">{formattedDate}</p>
         </div>
+      </div>
 
-        {/* Middle: Desktop Nav Links */}
-        <div className="hidden xl:flex items-center gap-0.5 flex-1 justify-center px-4">
-          {navItems.map((item) => (
-            <button
-              key={item.name} 
-              onClick={() => setActiveTab(item.name)}
-              className={`flex items-center gap-1 px-2.5 py-2 rounded-lg text-xs font-medium transition-colors cursor-pointer whitespace-nowrap ${activeTab === item.name
-                ? "text-[#FD7E14] bg-orange-50 border-b-2 border-[#FD7E14] rounded-b-none"
-                : "text-gray-500 hover:text-[#FD7E14] hover:bg-orange-50"
-                }`}
-            >
-              <item.icon className="w-4 h-4 flex-shrink-0" />
-              <span>{item.name}</span>
-              {item.hasDropdown && <ChevronDown className="w-3 h-3 opacity-60" />}
-            </button>
-          ))}
-        </div>
-
-        {/* Right: User Profile + Settings + Mobile Menu */}
-        <div className="flex items-center gap-2 flex-shrink-0">
-          {/* Profile Capsule */}
-          <div className="relative">
-            <button
-              onClick={() => setIsProfileOpen(!isProfileOpen)}
-              className="flex items-center gap-2 bg-[#FAF8F5] hover:bg-[#F0EDE8] border border-gray-200 rounded-full py-1.5 pl-2 pr-3 transition-all cursor-pointer"
-            >
-              <div className="w-7 h-7 rounded-full bg-[#E8DFD3] flex items-center justify-center text-gray-500">
-                <User className="w-4 h-4" />
-              </div>
-              <div className="hidden sm:flex flex-col justify-center">
-                <span className="text-xs font-bold text-[#2C2C2C] leading-tight">{currentUser?.name || "Sid"}</span>
-                <span className="text-[9px] text-gray-400 font-semibold uppercase tracking-wider">Save Max Bulls Realty</span>
-              </div>
-              <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
-            </button>
-
-            {isProfileOpen && (
-              <div className="absolute right-0 mt-2 w-52 bg-white border border-gray-200 rounded-xl shadow-lg py-1.5 z-50">
-                <div className="px-4 py-2 border-b border-gray-100">
-                  <p className="text-xs text-gray-400 font-medium">Logged in as</p>
-                  <p className="text-sm font-semibold text-[#2C2C2C] truncate">{currentUser?.email || "admin@bullsdeal.com"}</p>
-                </div>
-                <button
-                  onClick={handleLogout}
-                  className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 font-medium transition-colors text-left cursor-pointer"
-                >
-                  <LogOut className="w-4 h-4" />
-                  Sign Out
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Settings Button */}
-          <button className="hidden sm:flex w-9 h-9 rounded-xl bg-white border border-gray-200 items-center justify-center text-gray-500 hover:text-[#FD7E14] hover:border-[#FD7E14] transition-all shadow-sm cursor-pointer">
-            <Settings className="w-4 h-4" />
-          </button>
-
-          {/* Mobile Menu Toggle */}
-          <button
-            className="xl:hidden w-9 h-9 rounded-xl bg-white border border-gray-200 flex items-center justify-center text-gray-500 hover:text-[#FD7E14] transition-all shadow-sm cursor-pointer"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+      {/* KPI Cards Grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        {[
+          { label: "Gross Commission Received (YTD)", value: "$0.00", color: "#5b67f1", icon: <RefreshCw className="w-5 h-5" /> },
+          { label: "Pending Receipts", value: "-", color: "#0dcaf0", icon: <FileText className="w-5 h-5" /> },
+          { label: "Last Reconciliation Done", value: "-", color: "#d63384", icon: <Handshake className="w-5 h-5" /> },
+          { label: "Number of Active Agent", value: "48", color: "#dc3545", icon: <Users className="w-5 h-5" /> },
+          { label: "Trades Open", value: "0", color: "#3f51b5", icon: <ArrowUpRight className="w-5 h-5" /> },
+          { label: "Trades Closing This Month", value: "0", color: "#28a745", icon: <Calendar className="w-5 h-5" /> },
+          { label: "Trades Closing Today", value: "0", color: "#ffc107", icon: <TrendingUp className="w-5 h-5" /> },
+          { label: "Trades Closed (YTD)", value: "0", color: "#fd7e14", icon: <BarChart3 className="w-5 h-5" /> },
+        ].map((card) => (
+          <div
+            key={card.label}
+            className="bg-white rounded-xl shadow-sm p-4 flex items-center justify-between transition-all hover:shadow-md"
+            style={{ borderLeft: `4px solid ${card.color}` }}
           >
-            {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
-          </button>
-        </div>
-      </nav>
+            <div className="space-y-1 min-w-0 pr-2">
+              <span className="text-[10px] sm:text-xs font-semibold text-gray-400 uppercase tracking-wider block leading-tight">{card.label}</span>
+              <span className="text-xl sm:text-2xl font-bold text-[#2C2C2C]">{card.value}</span>
+            </div>
+            <div
+              className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center text-white shadow-sm flex-shrink-0"
+              style={{ backgroundColor: card.color }}
+            >
+              {card.icon}
+            </div>
+          </div>
+        ))}
+      </div>
 
-      {/* Mobile Navigation Drawer */}
-      {isMobileMenuOpen && (
-        <div className="xl:hidden fixed inset-0 z-40 top-16">
-          <div className="absolute inset-0 bg-black/30" onClick={() => setIsMobileMenuOpen(false)} />
-          <div className="absolute top-0 left-0 w-72 max-w-full h-full bg-white shadow-xl flex flex-col py-4">
-            {navItems.map((item) => (
-              <button
-                key={item.name}
-                onClick={() => { setActiveTab(item.name); setIsMobileMenuOpen(false); }}
-                className={`flex items-center gap-3 px-5 py-3 text-sm font-medium transition-colors cursor-pointer ${activeTab === item.name
-                  ? "text-[#FD7E14] bg-orange-50 border-l-4 border-[#FD7E14]"
-                  : "text-gray-600 hover:text-[#FD7E14] hover:bg-orange-50 border-l-4 border-transparent"
-                  }`}
-              >
-                <item.icon className="w-5 h-5 flex-shrink-0" />
-                <span>{item.name}</span>
-                {item.hasDropdown && <ChevronDown className="w-3.5 h-3.5 opacity-60 ml-auto" />}
-              </button>
-            ))}
+      {/* Middle Section: Commission Received + Sidebar */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6">
+        {/* Commission Received (3/4) */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 lg:col-span-3 flex flex-col min-h-[300px] sm:h-[340px]">
+          <div className="flex items-center gap-2 pb-4 border-b border-gray-100 mb-4 flex-shrink-0">
+            <div className="w-7 h-7 rounded bg-orange-100 flex items-center justify-center text-[#fd7e14]">
+              <BarChart3 className="w-4 h-4" />
+            </div>
+            <h2 className="text-sm font-bold text-[#2C2C2C]">Commission Received</h2>
+          </div>
+
+          <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-gray-100 overflow-hidden">
+            <div className="flex flex-col pr-0 sm:pr-4 pb-4 sm:pb-0">
+              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Monthly Trend</span>
+              <div className="flex-1 flex flex-col justify-between text-[10px] text-gray-300 font-mono py-1 pr-2 select-none overflow-hidden">
+                {[...Array(8)].map((_, i) => (
+                  <div key={i} className="flex items-center w-full gap-2">
+                    <span className="w-8 text-right">$0k</span>
+                    <div className="flex-1 border-b border-dashed border-gray-100" />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex flex-col px-0 sm:px-4 py-4 sm:py-0">
+              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">By Trade Type</span>
+              <div className="flex-1 flex flex-col items-center justify-center text-center">
+                <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mb-2.5">
+                  <Check className="w-5 h-5 text-gray-300" />
+                </div>
+                <span className="text-xs text-gray-400 font-medium">No data available</span>
+              </div>
+            </div>
+
+            <div className="flex flex-col pl-0 sm:pl-4 pt-4 sm:pt-0">
+              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">By We Are</span>
+              <div className="flex-1 flex flex-col items-center justify-center text-center">
+                <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mb-2.5">
+                  <Check className="w-5 h-5 text-gray-300" />
+                </div>
+                <span className="text-xs text-gray-400 font-medium">No data available</span>
+              </div>
+            </div>
           </div>
         </div>
-      )}
 
-      {/* Main Content — full width, no outer horizontal margin */}
-      <main className="flex-1 w-full px-4 sm:px-6 py-6 space-y-6">
-
-        {/* Page Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-gray-200 pb-5">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#2C2C2C]">Good Evening</h1>
-            <p className="text-sm text-gray-400 mt-1 font-medium">{formattedDate}</p>
-          </div>
-        </div>
-
-        {/* KPI Cards Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        {/* Right Sidebar (1/4) */}
+        <div className="flex flex-col gap-3 sm:gap-4 lg:col-span-1">
           {[
-            { label: "Gross Commission Received (YTD)", value: "$0.00", color: "#5b67f1", icon: <RefreshCw className="w-5 h-5" /> },
-            { label: "Pending Receipts", value: "-", color: "#0dcaf0", icon: <FileText className="w-5 h-5" /> },
-            { label: "Last Reconciliation Done", value: "-", color: "#d63384", icon: <Handshake className="w-5 h-5" /> },
-            { label: "Number of Active Agent", value: "48", color: "#dc3545", icon: <Users className="w-5 h-5" /> },
-            { label: "Trades Open", value: "0", color: "#3f51b5", icon: <ArrowUpRight className="w-5 h-5" /> },
-            { label: "Trades Closing This Month", value: "0", color: "#28a745", icon: <Calendar className="w-5 h-5" /> },
-            { label: "Trades Closing Today", value: "0", color: "#ffc107", icon: <TrendingUp className="w-5 h-5" /> },
-            { label: "Trades Closed (YTD)", value: "0", color: "#fd7e14", icon: <BarChart3 className="w-5 h-5" /> },
+            {
+              color: "#28a745",
+              icon: <Gift className="w-3.5 h-3.5" />,
+              bgColor: "bg-green-50",
+              textColor: "text-[#28a745]",
+              title: "Birthdays This Month",
+              count: "0 agent(s)",
+              empty: "No birthdays this month",
+            },
+            {
+              color: "#fd7e14",
+              icon: <AlertTriangle className="w-3.5 h-3.5" />,
+              bgColor: "bg-orange-50",
+              textColor: "text-[#fd7e14]",
+              title: "RECO License Expiring",
+              count: "0 agent(s)",
+              empty: "No expiries coming up",
+            },
+            {
+              color: "#3f51b5",
+              icon: <Wallet className="w-3.5 h-3.5" />,
+              bgColor: "bg-indigo-50",
+              textColor: "text-[#3f51b5]",
+              title: "Employee Payroll",
+              count: "0 employee(s)",
+              empty: "No payroll due",
+            },
           ].map((card) => (
             <div
-              key={card.label}
-              className="bg-white rounded-xl shadow-sm p-4 flex items-center justify-between transition-all hover:shadow-md"
-              style={{ borderLeft: `4px solid ${card.color}` }}
+              key={card.title}
+              className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex flex-col justify-between"
+              style={{ borderTop: `4px solid ${card.color}` }}
             >
-              <div className="space-y-1 min-w-0 pr-2">
-                <span className="text-[10px] sm:text-xs font-semibold text-gray-400 uppercase tracking-wider block leading-tight">{card.label}</span>
-                <span className="text-xl sm:text-2xl font-bold text-[#2C2C2C]">{card.value}</span>
+              <div className="flex items-center justify-between pb-1">
+                <div className="flex items-center gap-2">
+                  <div className={`w-6 h-6 rounded ${card.bgColor} flex items-center justify-center ${card.textColor}`}>
+                    {card.icon}
+                  </div>
+                  <h3 className="text-xs font-bold text-[#2C2C2C]">{card.title}</h3>
+                </div>
+                <span className="text-[10px] font-bold text-gray-400 whitespace-nowrap ml-2">{card.count}</span>
               </div>
-              <div
-                className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center text-white shadow-sm flex-shrink-0"
-                style={{ backgroundColor: card.color }}
-              >
-                {card.icon}
+              <div className="flex items-center gap-2 pt-2">
+                <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
+                  <Check className="w-3 h-3 text-gray-300" />
+                </div>
+                <span className="text-[11px] text-gray-400 font-medium">{card.empty}</span>
               </div>
             </div>
           ))}
         </div>
+      </div>
 
-        {/* Middle Section: Commission Received + Sidebar */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6">
-
-          {/* Commission Received (3/4) */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 lg:col-span-3 flex flex-col min-h-[300px] sm:h-[340px]">
-            <div className="flex items-center gap-2 pb-4 border-b border-gray-100 mb-4 flex-shrink-0">
-              <div className="w-7 h-7 rounded bg-orange-100 flex items-center justify-center text-[#fd7e14]">
-                <BarChart3 className="w-4 h-4" />
+      {/* Bottom: Performer Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col h-[260px] sm:h-[280px]">
+          <div className="flex items-center justify-between pb-4 border-b border-gray-100 mb-4 flex-shrink-0">
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-full bg-yellow-50 flex items-center justify-center text-[#ffc107]">
+                <Star className="w-4 h-4 fill-[#ffc107]" />
               </div>
-              <h2 className="text-sm font-bold text-[#2C2C2C]">Commission Received</h2>
+              <h2 className="text-sm font-bold text-[#2C2C2C]">Top Performer (YTD)</h2>
             </div>
-
-            <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-gray-100 overflow-hidden">
-              {/* Monthly Trend */}
-              <div className="flex flex-col pr-0 sm:pr-4 pb-4 sm:pb-0">
-                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Monthly Trend</span>
-                <div className="flex-1 flex flex-col justify-between text-[10px] text-gray-300 font-mono py-1 pr-2 select-none overflow-hidden">
-                  {[...Array(8)].map((_, i) => (
-                    <div key={i} className="flex items-center w-full gap-2">
-                      <span className="w-8 text-right">$0k</span>
-                      <div className="flex-1 border-b border-dashed border-gray-100" />
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* By Trade Type */}
-              <div className="flex flex-col px-0 sm:px-4 py-4 sm:py-0">
-                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">By Trade Type</span>
-                <div className="flex-1 flex flex-col items-center justify-center text-center">
-                  <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mb-2.5">
-                    <Check className="w-5 h-5 text-gray-300" />
-                  </div>
-                  <span className="text-xs text-gray-400 font-medium">No data available</span>
-                </div>
-              </div>
-
-              {/* By We Are */}
-              <div className="flex flex-col pl-0 sm:pl-4 pt-4 sm:pt-0">
-                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">By We Are</span>
-                <div className="flex-1 flex flex-col items-center justify-center text-center">
-                  <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mb-2.5">
-                    <Check className="w-5 h-5 text-gray-300" />
-                  </div>
-                  <span className="text-xs text-gray-400 font-medium">No data available</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Sidebar (1/4) */}
-          <div className="flex flex-col gap-3 sm:gap-4 lg:col-span-1">
-            {[
-              {
-                color: "#28a745",
-                icon: <Gift className="w-3.5 h-3.5" />,
-                bgColor: "bg-green-50",
-                textColor: "text-[#28a745]",
-                title: "Birthdays This Month",
-                count: "0 agent(s)",
-                empty: "No birthdays this month",
-              },
-              {
-                color: "#fd7e14",
-                icon: <AlertTriangle className="w-3.5 h-3.5" />,
-                bgColor: "bg-orange-50",
-                textColor: "text-[#fd7e14]",
-                title: "RECO License Expiring",
-                count: "0 agent(s)",
-                empty: "No expiries coming up",
-              },
-              {
-                color: "#3f51b5",
-                icon: <Wallet className="w-3.5 h-3.5" />,
-                bgColor: "bg-indigo-50",
-                textColor: "text-[#3f51b5]",
-                title: "Employee Payroll",
-                count: "0 employee(s)",
-                empty: "No payroll due",
-              },
-            ].map((card) => (
-              <div
-                key={card.title}
-                className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex flex-col justify-between"
-                style={{ borderTop: `4px solid ${card.color}` }}
+            <div className="relative">
+              <button
+                onClick={() => setIsPerformerDropdownOpen(!isPerformerDropdownOpen)}
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-[#FAF8F5] hover:bg-[#F0EDE8] border border-gray-200 rounded-lg text-xs font-semibold text-gray-600 transition-all cursor-pointer"
               >
-                <div className="flex items-center justify-between pb-1">
-                  <div className="flex items-center gap-2">
-                    <div className={`w-6 h-6 rounded ${card.bgColor} flex items-center justify-center ${card.textColor}`}>
-                      {card.icon}
-                    </div>
-                    <h3 className="text-xs font-bold text-[#2C2C2C]">{card.title}</h3>
-                  </div>
-                  <span className="text-[10px] font-bold text-gray-400 whitespace-nowrap ml-2">{card.count}</span>
+                <span>Commission</span>
+                <ChevronDown className="w-3.5 h-3.5" />
+              </button>
+              {isPerformerDropdownOpen && (
+                <div className="absolute right-0 mt-1.5 w-36 bg-white border border-gray-200 rounded-lg shadow-md py-1 z-40">
+                  <button className="w-full text-left px-3 py-1.5 text-xs hover:bg-[#FAF8F5] text-gray-700 font-medium">Commission</button>
+                  <button className="w-full text-left px-3 py-1.5 text-xs hover:bg-[#FAF8F5] text-gray-700 font-medium">Deals Closed</button>
                 </div>
-                <div className="flex items-center gap-2 pt-2">
-                  <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
-                    <Check className="w-3 h-3 text-gray-300" />
-                  </div>
-                  <span className="text-[11px] text-gray-400 font-medium">{card.empty}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Bottom: Performer Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-          {/* Top Performer (YTD) */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col h-[260px] sm:h-[280px]">
-            <div className="flex items-center justify-between pb-4 border-b border-gray-100 mb-4 flex-shrink-0">
-              <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-full bg-yellow-50 flex items-center justify-center text-[#ffc107]">
-                  <Star className="w-4 h-4 fill-[#ffc107]" />
-                </div>
-                <h2 className="text-sm font-bold text-[#2C2C2C]">Top Performer (YTD)</h2>
-              </div>
-              <div className="relative">
-                <button
-                  onClick={() => setIsPerformerDropdownOpen(!isPerformerDropdownOpen)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-[#FAF8F5] hover:bg-[#F0EDE8] border border-gray-200 rounded-lg text-xs font-semibold text-gray-600 transition-all cursor-pointer"
-                >
-                  <span>Commission</span>
-                  <ChevronDown className="w-3.5 h-3.5" />
-                </button>
-                {isPerformerDropdownOpen && (
-                  <div className="absolute right-0 mt-1.5 w-36 bg-white border border-gray-200 rounded-lg shadow-md py-1 z-40">
-                    <button className="w-full text-left px-3 py-1.5 text-xs hover:bg-[#FAF8F5] text-gray-700 font-medium">Commission</button>
-                    <button className="w-full text-left px-3 py-1.5 text-xs hover:bg-[#FAF8F5] text-gray-700 font-medium">Deals Closed</button>
-                  </div>
-                )}
-              </div>
+              )}
             </div>
-            <div className="flex-1 flex flex-col justify-end text-[10px] text-gray-300 font-mono select-none overflow-hidden">
-              <div className="flex-1 flex h-full w-full pb-3 border-b border-gray-100 relative">
-                <div className="absolute inset-0 flex flex-col justify-between py-2 pointer-events-none">
-                  {[...Array(5)].map((_, idx) => (
-                    <div key={idx} className="w-full border-b border-dashed border-gray-100" />
-                  ))}
-                </div>
-              </div>
-              <div className="flex justify-between w-full pt-2 px-1">
-                {[...Array(6)].map((_, idx) => (
-                  <span key={idx} className="text-center">$0k</span>
+          </div>
+          <div className="flex-1 flex flex-col justify-end text-[10px] text-gray-300 font-mono select-none overflow-hidden">
+            <div className="flex-1 flex h-full w-full pb-3 border-b border-gray-100 relative">
+              <div className="absolute inset-0 flex flex-col justify-between py-2 pointer-events-none">
+                {[...Array(5)].map((_, idx) => (
+                  <div key={idx} className="w-full border-b border-dashed border-gray-100" />
                 ))}
               </div>
             </div>
-          </div>
-
-          {/* Monthly Performer */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col h-[260px] sm:h-[280px]">
-            <div className="flex items-center justify-between pb-4 border-b border-gray-100 mb-4 flex-shrink-0">
-              <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-full bg-green-50 flex items-center justify-center text-[#28a745]">
-                  <Calendar className="w-4 h-4 text-[#28a745]" />
-                </div>
-                <h2 className="text-sm font-bold text-[#2C2C2C]">Monthly Performer</h2>
-              </div>
-            </div>
-            <div className="flex-1 flex flex-col justify-end text-[10px] text-gray-300 font-mono select-none overflow-hidden">
-              <div className="flex-1 flex h-full w-full pb-3 border-b border-gray-100 relative">
-                <div className="absolute inset-0 flex flex-col justify-between py-2 pointer-events-none">
-                  {[...Array(5)].map((_, idx) => (
-                    <div key={idx} className="w-full border-b border-dashed border-gray-100" />
-                  ))}
-                </div>
-              </div>
-              <div className="flex justify-between w-full pt-2 px-1">
-                {[...Array(6)].map((_, idx) => (
-                  <span key={idx} className="text-center">$0k</span>
-                ))}
-              </div>
+            <div className="flex justify-between w-full pt-2 px-1">
+              {[...Array(6)].map((_, idx) => (
+                <span key={idx} className="text-center">$0k</span>
+              ))}
             </div>
           </div>
         </div>
 
-      </main>
-    </div>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col h-[260px] sm:h-[280px]">
+          <div className="flex items-center justify-between pb-4 border-b border-gray-100 mb-4 flex-shrink-0">
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-full bg-green-50 flex items-center justify-center text-[#28a745]">
+                <Calendar className="w-4 h-4 text-[#28a745]" />
+              </div>
+              <h2 className="text-sm font-bold text-[#2C2C2C]">Monthly Performer</h2>
+            </div>
+          </div>
+          <div className="flex-1 flex flex-col justify-end text-[10px] text-gray-300 font-mono select-none overflow-hidden">
+            <div className="flex-1 flex h-full w-full pb-3 border-b border-gray-100 relative">
+              <div className="absolute inset-0 flex flex-col justify-between py-2 pointer-events-none">
+                {[...Array(5)].map((_, idx) => (
+                  <div key={idx} className="w-full border-b border-dashed border-gray-100" />
+                ))}
+              </div>
+            </div>
+            <div className="flex justify-between w-full pt-2 px-1">
+              {[...Array(6)].map((_, idx) => (
+                <span key={idx} className="text-center">$0k</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
   );
 }
