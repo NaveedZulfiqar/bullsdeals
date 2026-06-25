@@ -1,0 +1,73 @@
+import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
+import User from "@/models/User";
+
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/bullsdeals";
+
+interface MongooseGlobal {
+  conn: typeof mongoose | null;
+  promise: Promise<typeof mongoose> | null;
+}
+
+declare global {
+  var mongoose: MongooseGlobal | undefined;
+}
+
+let cached = global.mongoose;
+
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
+
+export async function connectToDatabase() {
+  if (cached.conn) {
+    return cached.conn;
+  }
+
+  if (!cached.promise) {
+    const opts = {
+      bufferCommands: false,
+    };
+
+    cached.promise = mongoose.connect(MONGODB_URI, opts).then(async (m) => {
+      console.log("MongoDB connected successfully");
+      // Seed default admin user
+      await seedDefaultAdmin();
+      return m;
+    });
+  }
+
+  try {
+    cached.conn = await cached.promise;
+  } catch (e) {
+    cached.promise = null;
+    throw e;
+  }
+
+  return cached.conn;
+}
+
+async function seedDefaultAdmin() {
+  try {
+    const adminEmail = process.env.DEFAULT_ADMIN_EMAIL || "admin@bullsdeal.com";
+    const adminPassword = process.env.DEFAULT_ADMIN_PASSWORD || "Changeme1234!@";
+
+    const existingAdmin = await User.findOne({ email: adminEmail.toLowerCase() });
+
+    if (!existingAdmin) {
+      console.log("No default admin user found. Creating one...");
+      const hashedPassword = await bcrypt.hash(adminPassword, 10);
+      await User.create({
+        email: adminEmail.toLowerCase(),
+        password: hashedPassword,
+        name: "Sid", // Sid from the save max bulls deals screenshot!
+        role: "admin",
+      });
+      console.log(`Default admin user created: ${adminEmail}`);
+    } else {
+      console.log("Default admin user already exists");
+    }
+  } catch (error) {
+    console.error("Error seeding default admin user:", error);
+  }
+}

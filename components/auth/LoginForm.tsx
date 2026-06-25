@@ -1,0 +1,188 @@
+"use client";
+
+import React, { useState } from "react";
+import { InputField } from "./InputField";
+import { AuthButton } from "./AuthButton";
+
+export const LoginForm: React.FC = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [successMsg, setSuccessMsg] = useState("");
+
+  const validate = () => {
+    const tempErrors: { email?: string; password?: string } = {};
+    if (!email) {
+      tempErrors.email = "Email address is required";
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      tempErrors.email = "Please enter a valid email address";
+    }
+
+    if (!password) {
+      tempErrors.password = "Password is required";
+    } else if (password.length < 6) {
+      tempErrors.password = "Password must be at least 6 characters";
+    }
+
+    setErrors(tempErrors);
+    return Object.keys(tempErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSuccessMsg("");
+    setErrors({});
+    if (!validate()) return;
+
+    setIsLoading(true);
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Authentication failed");
+      }
+
+      setSuccessMsg("Successfully signed in! Redirecting...");
+      setEmail("");
+      setPassword("");
+      
+      // Force redirect to reload and trigger middleware correctly
+      setTimeout(() => {
+        window.location.href = "/dashboard";
+      }, 1000);
+    } catch (err: any) {
+      setErrors({ email: err.message || "Invalid credentials" });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="w-full max-w-[420px] mx-auto flex flex-col justify-center h-full">
+      {/* Headings */}
+      <div className="text-left mb-8">
+        <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-text mb-2.5">
+          Welcome Back
+        </h1>
+        <p className="text-sm text-text/60 font-medium">
+          Sign in to continue to your account
+        </p>
+      </div>
+
+      {successMsg && (
+        <div className="mb-6 p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-medium animate-fade-in flex items-center gap-2">
+          <svg
+            className="w-5 h-5 text-emerald-600 flex-shrink-0"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          {successMsg}
+        </div>
+      )}
+
+      {/* Login Form */}
+      <form onSubmit={handleSubmit} className="space-y-5 text-left">
+        {/* Email */}
+        <InputField
+          id="email-input"
+          label="Email Address"
+          type="email"
+          placeholder="name@example.com"
+          value={email}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            if (errors.email) setErrors((prev) => ({ ...prev, email: undefined }));
+          }}
+          error={errors.email}
+          disabled={isLoading}
+          required
+        />
+
+        {/* Password */}
+        <InputField
+          id="password-input"
+          label="Password"
+          type="password"
+          placeholder="••••••••"
+          value={password}
+          onChange={(e) => {
+            setPassword(e.target.value);
+            if (errors.password) setErrors((prev) => ({ ...prev, password: undefined }));
+          }}
+          error={errors.password}
+          disabled={isLoading}
+          required
+        />
+
+        {/* Remember Me & Forgot Password */}
+        <div className="flex items-center justify-between mt-2.5">
+          <label className="flex items-center gap-2.5 cursor-pointer group select-none">
+            <div className="relative">
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                disabled={isLoading}
+                className="sr-only peer"
+              />
+              <div className="w-5 h-5 border border-border rounded-lg bg-card transition-all duration-300 peer-checked:border-primary peer-checked:bg-primary peer-hover:border-primary/60" />
+              <svg
+                className="absolute top-1 left-1 w-3 h-3 text-white transition-opacity duration-300 opacity-0 peer-checked:opacity-100 pointer-events-none"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="3"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+              </svg>
+            </div>
+            <span className="text-xs font-semibold text-text/70 uppercase tracking-wider group-hover:text-text transition-colors">
+              Remember Me
+            </span>
+          </label>
+
+          <a
+            href="#forgot-password"
+            className="text-xs font-semibold uppercase tracking-wider text-primary hover:text-primary-hover transition-colors"
+          >
+            Forgot Password?
+          </a>
+        </div>
+
+        {/* Login Button */}
+        <AuthButton type="submit" isLoading={isLoading} className="mt-2">
+          Sign In
+        </AuthButton>
+      </form>
+
+      <p className="mt-8 text-sm text-text/60 font-medium text-center">
+        Don&apos;t have an account?{" "}
+        <a
+          href="#signup"
+          className="font-semibold text-primary hover:text-primary-hover transition-colors underline underline-offset-4"
+          onClick={(e) => e.preventDefault()}
+        >
+          Sign up now
+        </a>
+      </p>
+    </div>
+  );
+};

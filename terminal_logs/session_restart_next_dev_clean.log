@@ -1,0 +1,41 @@
+--- Starting non-blocking session at Wed Jun 24 17:38:51 2026 ---
+> . "/Users/syedabdullah/.eigent/user_36841/spaces/space_ad015c7fa2054e2abe04a10dde4424d4/projects/1782303544882-1528/runs/1782303545870-522/single_agent/.venv/bin/activate" && npm run dev
+
+
+
+> bullsdeals@0.1.0 dev
+
+> next dev
+
+
+
+▲ Next.js 16.2.9 (Turbopack)
+
+- Local:         http://localhost:3000
+
+- Network:       http://192.168.18.109:3000
+
+- Environments: .env.local
+
+✓ Ready in 263ms
+
+⚠ Turbopack's filesystem cache has been deleted because we previously detected an internal error in Turbopack. Builds or page loads may be slower as a result.
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+
+
+
+ HEAD /login 200 in 1863ms (next.js: 1757ms, proxy.ts: 36ms, application-code: 70ms)
+
+ GET /login 200 in 34ms (next.js: 3ms, proxy.ts: 4ms, application-code: 27ms)
+
+MongoDB connected successfully
+
+Default admin user already exists
+
+ POST /api/auth/login 200 in 2.9s (next.js: 375ms, application-code: 2.5s)
+
+ GET /dashboard 200 in 292ms (next.js: 212ms, proxy.ts: 6ms, application-code: 73ms)
+
+ GET /api/auth/me 200 in 81ms (next.js: 78ms, application-code: 3ms)
+

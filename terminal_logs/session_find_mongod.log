@@ -1,0 +1,3 @@
+--- Blocking command timed out, converted to session at Wed Jun 24 17:21:17 2026 ---
+> . "/Users/syedabdullah/.eigent/user_36841/spaces/space_ad015c7fa2054e2abe04a10dde4424d4/projects/1782303544882-1528/runs/1782303545870-522/single_agent/.venv/bin/activate" && which mongod || find / -name mongod 2>/dev/null || find /usr/local -name mongod 2>/dev/null || true
+

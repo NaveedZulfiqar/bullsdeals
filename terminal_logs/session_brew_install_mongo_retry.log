@@ -1,0 +1,99 @@
+--- Blocking command timed out, converted to session at Wed Jun 24 17:26:51 2026 ---
+> . "/Users/syedabdullah/.eigent/user_36841/spaces/space_ad015c7fa2054e2abe04a10dde4424d4/projects/1782303544882-1528/runs/1782303545870-522/single_agent/.venv/bin/activate" && /opt/homebrew/bin/brew install mongodb-community
+
+==> Regenerating CA certificate bundle from keychain, this may take a while...
+
+🍺  /opt/homebrew/Cellar/ca-certificates/2026-05-14: 4 files, 199.2KB
+
+==> Installing mongodb/brew/mongodb-community dependency: openssl@3
+
+==> Pouring openssl@3--3.6.2.arm64_tahoe.bottle.tar.gz
+
+🍺  /opt/homebrew/Cellar/openssl@3/3.6.2: 7,627 files, 37.6MB
+
+==> Installing mongodb/brew/mongodb-community dependency: libngtcp2
+
+==> Pouring libngtcp2--1.23.0.arm64_tahoe.bottle.tar.gz
+
+🍺  /opt/homebrew/Cellar/libngtcp2/1.23.0: 21 files, 1.4MB
+
+==> Installing mongodb/brew/mongodb-community dependency: libuv
+
+==> Pouring libuv--1.52.1.arm64_tahoe.bottle.tar.gz
+
+🍺  /opt/homebrew/Cellar/libuv/1.52.1: 35 files, 1.3MB
+
+==> Installing mongodb/brew/mongodb-community dependency: llhttp
+
+==> Pouring llhttp--9.4.2.arm64_tahoe.bottle.tar.gz
+
+🍺  /opt/homebrew/Cellar/llhttp/9.4.2: 15 files, 164.0KB
+
+==> Installing mongodb/brew/mongodb-community dependency: simdutf
+
+==> Pouring simdutf--9.0.0.arm64_tahoe.bottle.tar.gz
+
+🍺  /opt/homebrew/Cellar/simdutf/9.0.0: 65 files, 2MB
+
+==> Installing mongodb/brew/mongodb-community dependency: merve
+
+==> Pouring merve--1.2.2_1.arm64_tahoe.bottle.tar.gz
+
+🍺  /opt/homebrew/Cellar/merve/1.2.2_1: 19 files, 148.6KB
+
+==> Installing mongodb/brew/mongodb-community dependency: nbytes
+
+==> Pouring nbytes--0.1.4.arm64_tahoe.bottle.tar.gz
+
+🍺  /opt/homebrew/Cellar/nbytes/0.1.4: 9 files, 89KB
+
+==> Installing mongodb/brew/mongodb-community dependency: simdjson
+
+==> Pouring simdjson--4.6.4.arm64_tahoe.bottle.tar.gz
+
+🍺  /opt/homebrew/Cellar/simdjson/4.6.4: 19 files, 8.0MB
+
+==> Installing mongodb/brew/mongodb-community dependency: sqlite
+
+==> Pouring sqlite--3.53.2.arm64_tahoe.bottle.tar.gz
+
+🍺  /opt/homebrew/Cellar/sqlite/3.53.2: 13 files, 5.3MB
+
+==> Installing mongodb/brew/mongodb-community dependency: node
+
+==> Pouring node--26.3.1.arm64_tahoe.bottle.tar.gz
+
+🍺  /opt/homebrew/Cellar/node/26.3.1: 2,066 files, 85.2MB
+
+==> Installing mongodb/brew/mongodb-community dependency: mongosh
+
+==> Pouring mongosh--2.8.3.arm64_tahoe.bottle.tar.gz
+
+🍺  /opt/homebrew/Cellar/mongosh/2.8.3: 16,529 files, 108.9MB
+
+==> Installing mongodb/brew/mongodb-community
+
+==> Caveats
+
+To start mongodb/brew/mongodb-community now and restart at login:
+
+  brew services start mongodb/brew/mongodb-community
+
+==> Summary
+
+🍺  /opt/homebrew/Cellar/mongodb-community/8.3.4: 11 files, 288.2MB, built in 3 seconds
+
+==> Running `brew cleanup mongodb-community`...
+
+Disable this behaviour by setting `HOMEBREW_NO_INSTALL_CLEANUP=1`.
+
+Hide these hints with `HOMEBREW_NO_ENV_HINTS=1` (see `man brew`).
+
+==> Caveats
+
+==> mongodb-community
+
+To start mongodb/brew/mongodb-community now and restart at login:
+
+  brew services start mongodb/brew/mongodb-community
+

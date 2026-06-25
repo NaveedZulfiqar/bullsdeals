@@ -1,0 +1,39 @@
+--- Starting non-blocking session at Wed Jun 24 17:35:59 2026 ---
+> . "/Users/syedabdullah/.eigent/user_36841/spaces/space_ad015c7fa2054e2abe04a10dde4424d4/projects/1782303544882-1528/runs/1782303545870-522/single_agent/.venv/bin/activate" && npm run dev
+
+
+
+> bullsdeals@0.1.0 dev
+
+> next dev
+
+
+
+▲ Next.js 16.2.9 (Turbopack)
+
+- Local:         http://localhost:3000
+
+- Network:       http://192.168.18.109:3000
+
+- Environments: .env.local
+
+✓ Ready in 280ms
+
+⨯ Another next dev server is already running.
+
+
+
+- Local:        http://localhost:3001
+
+- PID:          11617
+
+- Dir:          /Users/syedabdullah/Documents/Projects/Webs/bullsdeals
+
+- Log:          .next/dev/logs/next-development.log
+
+
+
+Run kill 11617 to stop it.
+
+
+
