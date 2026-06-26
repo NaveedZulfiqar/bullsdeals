@@ -2,8 +2,8 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { BackgroundPattern } from "./BackgroundPattern";
-import { LogoPlaceholder } from "./LogoPlaceholder";
 
 interface AuthLayoutProps {
   children: React.ReactNode;
@@ -12,30 +12,58 @@ interface AuthLayoutProps {
 export const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
   return (
     <main className="min-h-screen w-full bg-bg flex flex-col md:grid md:grid-cols-2 lg:grid-cols-12">
-      {/* LEFT SIDE: Login Form Area */}
-      <div className="flex-1 flex flex-col justify-center items-center px-6 py-12 sm:px-12 md:px-10 lg:col-span-5 xl:col-span-5 bg-card relative z-10 shadow-xl md:shadow-none">
-        {/* Decorative subtle border light on card side */}
-        <div className="absolute inset-y-0 right-0 w-[1px] bg-gradient-to-b from-transparent via-border to-transparent hidden md:block" />
-        
-        {/* Interactive card wrapper */}
+      {/* =========================
+          LEFT SIDE - LOGIN FORM
+      ========================== */}
+      <div className="relative z-10 flex flex-1 flex-col items-center justify-center bg-card px-6 py-12 shadow-xl md:px-10 md:shadow-none sm:px-12 lg:col-span-5 xl:col-span-5">
+        {/* Vertical Divider */}
+        <div className="absolute inset-y-0 right-0 hidden w-px bg-gradient-to-b from-transparent via-border to-transparent md:block" />
+
+        {/* Login Form */}
         <div className="w-full max-w-[420px] transition-all duration-500">
           {children}
         </div>
       </div>
 
-      {/* RIGHT SIDE: Elegant Decorative Panel */}
-      {/* Moves below login form on mobile (flex-col behavior), side-by-side on desktop */}
-      <div className="flex-1 min-h-[400px] md:min-h-screen relative flex flex-col items-center justify-center p-8 md:p-12 lg:col-span-7 xl:col-span-7 overflow-hidden">
-        {/* Background Patterns, Blurred Circles and Gradients */}
+      {/* =========================
+          RIGHT SIDE - BRANDING
+      ========================== */}
+      <div className="relative flex min-h-[450px] flex-1 items-center justify-center overflow-hidden px-8 py-12 md:min-h-screen md:px-14 lg:col-span-7 xl:col-span-7">
+        {/* Background Design */}
         <BackgroundPattern />
 
-        {/* Foreground Content: Dedicated empty Logo Placeholder area */}
-        <div className="relative z-10 flex flex-col items-center justify-center">
-          <LogoPlaceholder />
-          
-          {/* Subtle luxurious tagline under the placeholder */}
-          <p className="mt-6 text-xs text-text/50 font-medium tracking-[0.2em] uppercase text-center max-w-[280px] leading-relaxed">
-            Experience Premium Elegance &amp; Sophisticated Design
+        {/* Center Content */}
+        <div className="relative z-10 flex h-full w-full flex-col items-center justify-center">
+          {/* Logo */}
+          <div className="flex w-full items-center justify-center">
+            <Image
+              src="/logo.png"
+              alt="The Realty Bulls"
+              width={700}
+              height={700}
+              priority
+              className="
+                h-auto
+                w-[320px]
+                sm:w-[400px]
+                md:w-[500px]
+                lg:w-[580px]
+                xl:w-[650px]
+                2xl:w-[720px]
+                object-contain
+                drop-shadow-2xl
+                select-none
+              "
+            />
+          </div>
+
+          {/* Tagline */}
+          <p className="mt-10 max-w-md text-center text-sm font-medium uppercase tracking-[0.35em] text-text/60 leading-8 md:text-base">
+            EXPERIENCE PREMIUM ELEGANCE
+            <br />
+            &amp;
+            <br />
+            SOPHISTICATED DESIGN
           </p>
         </div>
       </div>
