@@ -34,6 +34,64 @@ function parseCSVLine(line: string): string[] {
   return result;
 }
 
+// Strip all non-alphanumeric chars and lowercase — used for fuzzy header matching
+function normalizeHeader(h: string): string {
+  return h.toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+
+// Covers camelCase exports, spaced human-readable, and variants with # symbols
+const HEADER_MAP: Record<string, string> = {
+  // camelCase / normalized
+  name: "name",
+  phone: "phone",
+  email: "email",
+  hst: "hst",
+  street: "street",
+  city: "city",
+  province: "province",
+  postalcode: "postalCode",
+  bankname: "bankName",
+  institutenumber: "instituteNumber",
+  institutenum: "instituteNumber",
+  institute: "instituteNumber",
+  transitnumber: "transitNumber",
+  transitnum: "transitNumber",
+  transit: "transitNumber",
+  accountnumber: "accountNumber",
+  accountnum: "accountNumber",
+  account: "accountNumber",
+};
+
+function resolveField(rawHeader: string): string | undefined {
+  // 1. Normalize (strip all non-alphanumeric)
+  const normalized = normalizeHeader(rawHeader);
+  if (HEADER_MAP[normalized]) return HEADER_MAP[normalized];
+
+  // 2. Lowercase + trim with spaces kept (e.g. "bank name", "postal code")
+  const lower = rawHeader.toLowerCase().trim();
+  const spacedMap: Record<string, string> = {
+    "name": "name",
+    "phone": "phone",
+    "email": "email",
+    "hst#": "hst",
+    "hst": "hst",
+    "street": "street",
+    "city": "city",
+    "province": "province",
+    "postal code": "postalCode",
+    "bank name": "bankName",
+    "institute #": "instituteNumber",
+    "institute#": "instituteNumber",
+    "transit #": "transitNumber",
+    "transit#": "transitNumber",
+    "account #": "accountNumber",
+    "account#": "accountNumber",
+  };
+  if (spacedMap[lower]) return spacedMap[lower];
+
+  return undefined;
+}
+
 export async function POST(request: NextRequest) {
   try {
     await connectToDatabase();
@@ -54,22 +112,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const headers = parseCSVLine(lines[0]).map((h) => h.toLowerCase().trim());
-
-    const headerMap: Record<string, string> = {
-      name: "name",
-      phone: "phone",
-      email: "email",
-      "hst#": "hst",
-      street: "street",
-      city: "city",
-      province: "province",
-      "postal code": "postalCode",
-      "bank name": "bankName",
-      "institute #": "instituteNumber",
-      "transit #": "transitNumber",
-      "account #": "accountNumber",
-    };
+    const rawHeaders = parseCSVLine(lines[0]);
+    const fieldByIndex: (string | undefined)[] = rawHeaders.map((h) =>
+      resolveField(h)
+    );
 
     const brokerages: any[] = [];
     const errors: string[] = [];
@@ -78,15 +124,15 @@ export async function POST(request: NextRequest) {
       const values = parseCSVLine(lines[i]);
       const data: any = {};
 
-      headers.forEach((header, idx) => {
-        const field = headerMap[header];
-        if (field && idx < values.length) {
-          data[field] = values[idx];
-        }
+      fieldByIndex.forEach((field, idx) => {
+        if (!field || idx >= values.length) return;
+        data[field] = values[idx];
       });
 
       if (!data.name || !data.phone) {
-        errors.push(`Row ${i + 1}: Missing required fields (Name or Phone)`);
+        errors.push(
+          `Row ${i + 1}: Missing required fields (name="${data.name ?? ""}", phone="${data.phone ?? ""}")`
+        );
         continue;
       }
 

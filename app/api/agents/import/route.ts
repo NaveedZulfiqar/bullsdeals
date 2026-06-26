@@ -57,6 +57,92 @@ function parseDate(dateStr: string): Date | null {
   return null;
 }
 
+// Normalize a header string: lowercase + remove spaces/special chars for comparison
+function normalizeHeader(h: string): string {
+  return h.toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+
+// Maps normalized header → model field name
+// Handles both camelCase exports ("firstname", "cellphone") and
+// human-readable headers ("first name", "cell phone", "hst#", etc.)
+const HEADER_MAP: Record<string, string> = {
+  // camelCase variants (from CSV export)
+  firstname: "firstName",
+  middlename: "middleName",
+  lastname: "lastName",
+  officenickname: "officeNickName",
+  tradename: "tradeName",
+  dateofbirth: "dateOfBirth",
+  hst: "hst",
+  sin: "sin",
+  street: "street",
+  city: "city",
+  province: "province",
+  postalcode: "postalCode",
+  email: "email",
+  cellphone: "cellPhone",
+  homephone: "homePhone",
+  website: "website",
+  agenttype: "agentType",
+  agentmentor: "agentMentor",
+  paytoprec: "payToPrec",
+  precname: "precName",
+  precstreet: "precStreet",
+  preccity: "precCity",
+  precprovince: "precProvince",
+  precpostalcode: "precPostalCode",
+  prechst: "precHst",
+  precbusinessnumber: "precBusinessNumber",
+  reconumber: "recoNumber",
+  recolicense: "recoLicExpiry",
+  recoliceexpiry: "recoLicExpiry",
+  recoliecexpiry: "recoLicExpiry",
+  agentcode: "agentCode",
+  isactive: "isActive",
+  photo: "photo",
+
+  // Human-readable / spaced variants
+  "first name": "firstName",
+  "middle name": "middleName",
+  "last name": "lastName",
+  "office nick name": "officeNickName",
+  "trade name": "tradeName",
+  "date of birth": "dateOfBirth",
+  "postal code": "postalCode",
+  "cell phone": "cellPhone",
+  "home phone": "homePhone",
+  "agent type": "agentType",
+  "agent mentor": "agentMentor",
+  "pay to prec": "payToPrec",
+  "prec name": "precName",
+  "prec street": "precStreet",
+  "prec city": "precCity",
+  "prec province": "precProvince",
+  "prec postal code": "precPostalCode",
+  "prec hst": "precHst",
+  "prec business number": "precBusinessNumber",
+  "reco": "recoNumber",
+  "reco lic expiry": "recoLicExpiry",
+  "agent code": "agentCode",
+  "is active": "isActive",
+};
+
+function resolveField(rawHeader: string): string | undefined {
+  // 1. Try normalized (strips all non-alphanumeric)
+  const normalized = normalizeHeader(rawHeader);
+  if (HEADER_MAP[normalized]) return HEADER_MAP[normalized];
+
+  // 2. Try lowercased with spaces preserved (for "first name" etc.)
+  const lower = rawHeader.toLowerCase().trim();
+  if (HEADER_MAP[lower]) return HEADER_MAP[lower];
+
+  // 3. Try stripping trailing # or * symbols then normalizing
+  const stripped = normalizeHeader(rawHeader.replace(/[#*]/g, ""));
+  if (HEADER_MAP[stripped]) return HEADER_MAP[stripped];
+
+  return undefined;
+}
+
 export async function POST(request: NextRequest) {
   try {
     await connectToDatabase();
@@ -78,40 +164,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const headers = parseCSVLine(lines[0]).map((h) => h.toLowerCase().trim());
-
-    const headerMap: Record<string, string> = {
-      "first name": "firstName",
-      "middle name": "middleName",
-      "last name": "lastName",
-      "office nick name": "officeNickName",
-      "trade name": "tradeName",
-      "date of birth": "dateOfBirth",
-      "hst#": "hst",
-      "sin#": "sin",
-      street: "street",
-      city: "city",
-      province: "province",
-      "postal code": "postalCode",
-      email: "email",
-      "cell phone": "cellPhone",
-      "home phone": "homePhone",
-      website: "website",
-      "agent type": "agentType",
-      "agent mentor": "agentMentor",
-      "pay to prec": "payToPrec",
-      "prec name": "precName",
-      "prec street": "precStreet",
-      "prec city": "precCity",
-      "prec province": "precProvince",
-      "prec postal code": "precPostalCode",
-      "prec hst": "precHst",
-      "prec business number": "precBusinessNumber",
-      "reco #": "recoNumber",
-      "reco lic expiry": "recoLicExpiry",
-      "agent code": "agentCode",
-      "is active": "isActive",
-    };
+    const rawHeaders = parseCSVLine(lines[0]);
+    // Map each column index → model field name (or undefined if unknown)
+    const fieldByIndex: (string | undefined)[] = rawHeaders.map((h) =>
+      resolveField(h)
+    );
 
     const agents: any[] = [];
     const errors: string[] = [];
@@ -120,23 +177,25 @@ export async function POST(request: NextRequest) {
       const values = parseCSVLine(lines[i]);
       const agentData: any = {};
 
-      headers.forEach((header, idx) => {
-        const field = headerMap[header];
-        if (field && idx < values.length) {
-          const val = values[idx];
-          if (field === "dateOfBirth" || field === "recoLicExpiry") {
-            agentData[field] = parseDate(val);
-          } else if (field === "payToPrec" || field === "isActive") {
-            agentData[field] = val.toLowerCase() === "yes" || val === "true";
-          } else {
-            agentData[field] = val;
-          }
+      fieldByIndex.forEach((field, idx) => {
+        if (!field || idx >= values.length) return;
+        const val = values[idx];
+
+        if (field === "dateOfBirth" || field === "recoLicExpiry") {
+          agentData[field] = parseDate(val);
+        } else if (field === "payToPrec" || field === "isActive") {
+          agentData[field] =
+            val.toLowerCase() === "yes" ||
+            val.toLowerCase() === "true" ||
+            val === "1";
+        } else {
+          agentData[field] = val;
         }
       });
 
       if (!agentData.firstName || !agentData.lastName || !agentData.email) {
         errors.push(
-          `Row ${i + 1}: Missing required fields (First Name, Last Name, or Email)`
+          `Row ${i + 1}: Missing required fields (firstName="${agentData.firstName}", lastName="${agentData.lastName}", email="${agentData.email}")`
         );
         continue;
       }

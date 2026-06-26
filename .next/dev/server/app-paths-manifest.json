@@ -1,8 +1,5 @@
 {
   "/api/auth/me/route": "app/api/auth/me/route.js",
-  "/api/other-brokerages/route": "app/api/other-brokerages/route.js",
   "/api/solicitors/route": "app/api/solicitors/route.js",
-  "/dashboard/other-brokerages/page": "app/dashboard/other-brokerages/page.js",
-  "/dashboard/page": "app/dashboard/page.js",
   "/dashboard/solicitors/page": "app/dashboard/solicitors/page.js"
 }
