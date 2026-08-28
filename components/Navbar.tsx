@@ -353,7 +353,7 @@ export default function Navbar() {
                         key={dropItem.name}
                         onClick={() => {
                           router.push(dropItem.href);
-                          setIsMobileMenuOpen(false);
+                          setIsMobileMenuOpen(false); 
                           setOpenDropdown(null);
                         }}
                         className={`w-full py-2.5 pl-9 pr-4 text-left text-sm font-medium transition-colors cursor-pointer ${pathname.startsWith(dropItem.href)
